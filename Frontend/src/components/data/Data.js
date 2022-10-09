@@ -1,49 +1,49 @@
 export const nav = [
   {
-    text: "home",
+    text: "Home",
     path: "/",
   },
   {
-    text: "about",
+    text: "Buy Car",
     path: "/about",
   },
   {
-    text: "services",
-    path: "/services",
+    text: "Sell Car",
+    path: "/sell",
   },
   {
     text: "blog",
     path: "/blog",
   },
   {
-    text: "contact",
+    text: "Contact Us",
     path: "/contact",
   },
 ]
 export const featured = [
   {
     cover: "../images/hero/h1.png",
-    name: "Family House",
+    name: "Electric car",
     total: "122 Property",
   },
   {
     cover: "../images/hero/h2.png",
-    name: "House & Villa",
+    name: "SUVs",
     total: "155 Property",
   },
   {
     cover: "../images/hero/h3.png",
-    name: "Apartment",
+    name: "Sports Car",
     total: "300 Property",
   },
   {
     cover: "../images/hero/h4.png",
-    name: "Office & Studio",
+    name: "Luxury car",
     total: "80 Property",
   },
   {
     cover: "../images/hero/h6.png",
-    name: "Villa & Condo",
+    name: "Convertible",
     total: "80 Property",
   },
 ]

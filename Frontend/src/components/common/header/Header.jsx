@@ -1,31 +1,38 @@
 import React, { useState } from "react";
 import "./header.css";
 import { nav } from "../../data/Data";
-import { Link,useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../redux/userSlice";
+import { axiosInstance } from "../../../config";
+import axios from "axios";
 
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [navList, setNavList] = useState(false);
-  const navigate = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogout = async (e) => {
-    e.preventDefault();
-    dispatch(logout());
-    localStorage.clear();
-    navigate.push(`/`);
-  };
 
+    e.preventDefault();
+    try {
+      const res = await axios.get("http://localhost:5000/logout");
+      console.log(res);
+      dispatch(logout());
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
       <header>
         <div className="container flex">
           <div className="logo">
-            <img src="./images/logo.png" alt=""  />
+            <img src="./images/logo.png" alt="" />
           </div>
           <div className="nav">
             <ul className={navList ? "small" : "flex"}>
@@ -42,13 +49,13 @@ const Header = () => {
             </h4> */}
             {currentUser ? (
               <>
-                 <div>
                 <div>
-                  <button className="btn1" onClick={handleLogout}>
-                  <i className="fa fa-sign-out"></i> Log Out
-                </button>
+                  <div>
+                    <button className="btn1" onClick={handleLogout}>
+                      <i className="fa fa-sign-out"></i> Log Out
+                    </button>
+                  </div>
                 </div>
-              </div>
               </>
             ) : (
               <Link to="/Login">
@@ -57,7 +64,6 @@ const Header = () => {
                 </button>
               </Link>
             )}
-
           </div>
 
           <div className="toggle">

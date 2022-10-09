@@ -51,7 +51,7 @@ export const getCar = async (req, res, next) => {
 // get all cars
 export const random = async (req, res, next) => {
   try {
-    const cars = await Car.find().sort({price: -1});
+    const cars = await Car.find({'buyerId' : null}).sort({price: -1});
     res.status(200).json(cars);
   } catch (error) {
     next(error);

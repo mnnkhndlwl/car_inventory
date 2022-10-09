@@ -17,6 +17,10 @@ const CarSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    onRent: {
+      type: Boolean,
+      default: false,
+    },
     brand: {
       type: String,
       required: true,

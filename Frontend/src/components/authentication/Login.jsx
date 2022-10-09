@@ -1,29 +1,30 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
 import * as Components from "./Components";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../config";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginStart, loginSuccess } from "../../redux/userSlice";
+import axios from "axios";
 
 const Login = () => {
   const [signIn, toggle] = React.useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res = await axiosInstance.post("/api/authentication/signin", {
+      const res = await axios.post("http://localhost:5000/api/authentication/signin", {
         name,
         password,
       });
       dispatch(loginSuccess(res.data));
-      navigate.push(`/`);
+     // console.log(res.headers.token);
+      navigate("/");
     } catch (error) {
       dispatch(loginFailure());
     }

@@ -1,11 +1,14 @@
+import cookieParser from "cookie-parser";
 import express from "express";
 import { addCar,buyCar, getCar, random } from "../controllers/car.js";
 import { verifyToken } from "../verifyToken.js";
 
 const router = express.Router();
 
+router.use(cookieParser());
+
 //Add a car
-router.post("/", verifyToken ,addCar);
+router.post("/buyCar",verifyToken,addCar);
 
 //buy a car
 router.put("/buy/:id",verifyToken,buyCar);
