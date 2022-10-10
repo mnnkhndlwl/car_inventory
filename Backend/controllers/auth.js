@@ -26,19 +26,21 @@ export const signin = async (req, res, next) => {
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
     if (!isCorrect) return next(createError(400, "Wrong Credentials!"));
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT, {
-      expiresIn: "365d", // expires in 365 days
-    });
-    if (!token) {
-      console.log("no token");
-    }
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT,
+      {expiresIn:"3d"}
+    );
+  
     const { password, ...others } = user._doc; // as we don't want to send our password in response
-    res.cookie('ac', token);
+   // res.cookie('ac', token);
   //  return res.cookie("ac", token, {
   //     httpOnly: true,
   //     maxAge: 3600000
   //   }).status(200).json(others);
-    res.status(200).json(others);
+  res.status(200).json({...others, accessToken});
   } catch (error) {
     next(error);
   }
