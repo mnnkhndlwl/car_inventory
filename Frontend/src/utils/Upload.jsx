@@ -8,7 +8,7 @@ import {
 } from "firebase/storage";
 import app from "../firebase";
 import { userRequest} from "../config.js";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Upload = ({ setOpen }) => {
@@ -18,7 +18,7 @@ const Upload = ({ setOpen }) => {
   const [imgPerc, setImgPerc] = useState(0); // image percentage
  // const [videoPerc, setVideoPerc] = useState(0); // video percentage
   const [inputs, setInputs] = useState({});
-  const navigate = useLocation();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setInputs((prev) => {
