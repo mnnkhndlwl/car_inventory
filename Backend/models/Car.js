@@ -39,7 +39,6 @@ const CarSchema = new mongoose.Schema(
     },
     serviceCost: {
       type: Number,
-      required: true,
     },
     location: {
       type: String,

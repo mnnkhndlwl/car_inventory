@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import * as Components from "./Components";
 import { useNavigate } from "react-router-dom";
-import { axiosInstance } from "../../config";
+import { publicRequest } from "../../config";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginStart, loginSuccess } from "../../redux/userSlice";
-import axios from "axios";
 
 const Login = () => {
   const [signIn, toggle] = React.useState(true);
@@ -14,16 +13,16 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+
   const handleLogin = async (e) => {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res = await axios.post("http://localhost:5000/api/authentication/signin", {
+      const res = await publicRequest.post("/api/authentication/signin", {
         name,
         password,
       });
       dispatch(loginSuccess(res.data));
-     // console.log(res.headers.token);
       navigate("/");
     } catch (error) {
       dispatch(loginFailure());

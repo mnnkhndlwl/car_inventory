@@ -5,8 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../redux/userSlice";
-import { axiosInstance } from "../../../config";
-import axios from "axios";
 
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -18,8 +16,6 @@ const Header = () => {
 
     e.preventDefault();
     try {
-      const res = await axios.get("http://localhost:5000/logout");
-      console.log(res);
       dispatch(logout());
       navigate("/");
     } catch (error) {

@@ -7,7 +7,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import app from "../firebase";
-import {axiosInstance} from "../config.js";
+import { userRequest} from "../config.js";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -76,7 +76,7 @@ const Upload = ({ setOpen }) => {
     e.preventDefault();
     try {
       try {
-        const res = await axiosInstance.post("/api/car/buyCar", {...inputs}); 
+        const res = await userRequest.post("/api/car/buyCar",{...inputs}); 
         setOpen(false)
         res.status===200 && navigate("/");
       } catch (error) {

@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react"
-import { axiosInstance } from '../../../config';
+import { publicRequest } from '../../../config';
 import { useSelector } from "react-redux";
 // import { list } from "../../data/Data"
 
@@ -10,7 +10,7 @@ const RecentCard = () => {
   
   useEffect(() => {
     const fetchVideos = async () => {
-      const res = await axiosInstance.get(`/api/car/get/all/`);
+      const res = await publicRequest.get(`/api/car/get/all/`);
       setList(res.data);
     };
     fetchVideos();
