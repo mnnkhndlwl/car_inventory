@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from "react"
 import { publicRequest } from '../../../config';
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 // import { list } from "../../data/Data"
 
 const RecentCard = () => {
@@ -21,8 +22,9 @@ const RecentCard = () => {
     <>
       <div className='content grid3 mtop'>
         {list.map((val, index) => {
-          const { carImage, onRent, location, title, price, brand , sellerId } = val
+          const { _id,carImage, onRent, location, title, price, brand , sellerId } = val
           return (
+            <Link to={`/car/${_id}`} style={{ textDecoration: "none" }}>
                 <div className='box shadow' key={index}>
               <div className='img'>
                 <img src={carImage} alt='' />
@@ -44,6 +46,7 @@ const RecentCard = () => {
                 <span>{brand}</span>
               </div>
             </div>
+            </Link>
           )
         })}
       </div>

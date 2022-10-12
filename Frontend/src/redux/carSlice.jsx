@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  carVideo: null,
+  currentCar: null,
   loading: false,
   error: false,
 };
 
 export const carSlice = createSlice({
-  name: "video",
+  name: "car",
   initialState,
   reducers: {
     fetchStart: (state) => {
@@ -15,7 +15,7 @@ export const carSlice = createSlice({
     },
     fetchSuccess: (state, action) => {
       state.loading = false;
-      state.currentVideo = action.payload;
+      state.currentCar = action.payload;
     },
     fetchFailure: (state) => {
       state.loading = false;
