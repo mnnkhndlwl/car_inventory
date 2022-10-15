@@ -9,6 +9,7 @@ import Blog from "./components/blog/Blog";
 import Sell from "./components/sell/Sell";
 import Contact from "./components/contact/Contact";
 import Login from "./components/authentication/Login";
+import Success from "./components/Success/Success";
 import Car from "./components/Car/Car"
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
        <Route  path="pricing" element={<Pricing/>} />
        <Route  path="contact" element={<Contact/>} />
        <Route  path="Login" element={<Login/>} />
+       <Route path="Success" element={<Success/>} />
        <Route path="Car">
               <Route path=":id" element={<Car />} />
             </Route>

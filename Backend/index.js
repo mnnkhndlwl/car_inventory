@@ -5,6 +5,7 @@ import userRoutes from "./routes/auth.js";
 import carRoute from "./routes/carRoute.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import stripeRoute from "./routes/stripeRoute.js";
 import { verifyToken } from "./verifyToken.js";
 
 const app = express();
@@ -42,6 +43,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use("/api/authentication",userRoutes);
 app.use("/api/car", carRoute);
+app.use("/api/payme", stripeRoute);
 
 // app.get("/logout", verifyToken, (req, res) => {
 //   return res

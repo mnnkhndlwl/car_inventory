@@ -2,21 +2,27 @@ import styled from "styled-components";
 import { mobile } from "../../responsive";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { publicRequest,userRequest } from "../../config";
+import StripeCheckout from "react-stripe-checkout";
+import { publicRequest, userRequest } from "../../config";
 import React, { useEffect, useState } from "react";
 import { fetchSuccess } from "../../redux/carSlice";
+import seat from "./seat.png";
+import mileage from "./mileage.png";
+import engine from "./engine.png";
+import { Link, useNavigate } from "react-router-dom";
+
+const KEY = process.env.REACT_APP_STRIPE;
 
 const Container = styled.div``;
 
 const Wrapper = styled.div`
   padding: 50px;
   display: flex;
-  ${mobile({ padding: "10px", flexDirection:"column" })}
+  ${mobile({ padding: "10px", flexDirection: "column" })}
 `;
 
 const ImgContainer = styled.div`
   flex: 1;
-
 `;
 
 const Image = styled.img`
@@ -42,7 +48,7 @@ const Desc = styled.p`
 `;
 
 const Price = styled.span`
-  font-weight: 100;
+  font-weight: 400;
   font-size: 40px;
 `;
 
@@ -56,7 +62,7 @@ const FilterContainer = styled.div`
 
 const Filter = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: space-between;
 `;
 
 const FilterTitle = styled.span`
@@ -65,11 +71,17 @@ const FilterTitle = styled.span`
 `;
 
 const FilterColor = styled.div`
-  width: 20px;
-  height: 20px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   background-color: ${(props) => props.color};
-  margin: 0px 5px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  font-weight: bold;
+  color: black;
+  margin: 0px 35px;
   cursor: pointer;
 `;
 
@@ -105,21 +117,16 @@ const Amount = styled.span`
   margin: 0px 5px;
 `;
 
-const Button = styled.button`
-  padding: 15px;
-  border: 2px solid teal;
-  background-color: white;
-  cursor: pointer;
-  font-weight: 500;
-
-  &:hover{
-      background-color: #f8f4f4;
-  }
-`;
-
 const Car = () => {
   const { currentCar } = useSelector((state) => state.car);
+  const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [stripeToken, setStripeToken] = useState(null);
+
+  const onToken = (token) => {
+    setStripeToken(token);
+  };
 
   const path = useLocation().pathname.split("/")[2];
 
@@ -133,11 +140,24 @@ const Car = () => {
       }
     };
     fetchData();
-  }, [path,dispatch]);
+  }, [path, dispatch]);
 
-  if(!currentCar) return 'loading... ';
+  useEffect(() => {
+    const makeRequest = async () => {
+      try {
+        const res = await userRequest.post("/api/payme/payment/", {
+          tokenId: stripeToken.id,
+          amount: currentCar.price*100,
+        });
+          await userRequest.put(`/api/car/buy/${path}`);
+        navigate("/success");
+      } catch {}
+    };
+    stripeToken && makeRequest();
+  }, [stripeToken]);
 
-  
+  if (!currentCar) return "loading... ";
+
   return (
     <Container>
       <Wrapper>
@@ -145,19 +165,33 @@ const Car = () => {
           <Image src={currentCar.carImage} />
         </ImgContainer>
         <InfoContainer>
-          <Title>{currentCar.brand} {currentCar.title}</Title>
-          <Desc>
-            {currentCar.description}
-          </Desc>
-          <Price>₹ {currentCar.price}</Price>
+          <Title>
+            {currentCar.brand} {currentCar.title}
+          </Title>
+          <Desc>{currentCar.description}</Desc>
           <FilterContainer>
             <Filter>
-              <FilterTitle>Color</FilterTitle>
-              <FilterColor color="black" />
-              <FilterColor color="darkblue" />
-              <FilterColor color="gray" />
+              {/* <FilterTitle>Color</FilterTitle> */}
+              <FilterColor>
+                <img src={seat} /> 
+                <p>Seats</p>
+                <span>
+                  {currentCar.seats}
+                </span>
+              </FilterColor>
+              <FilterColor>
+                <img src={mileage} />
+              <p>mileage</p>
+                <span>{currentCar.mileage}</span>
+              </FilterColor>
+              <FilterColor>
+                <img src={engine} />
+              <p>engine</p>
+                <span>{currentCar.engine}</span>
+              </FilterColor>
             </Filter>
-            <Filter>
+
+            {/* <Filter>
               <FilterTitle>Size</FilterTitle>
               <FilterSize>
                 <FilterSizeOption>XS</FilterSizeOption>
@@ -166,15 +200,34 @@ const Car = () => {
                 <FilterSizeOption>L</FilterSizeOption>
                 <FilterSizeOption>XL</FilterSizeOption>
               </FilterSize>
-            </Filter>
+            </Filter> */}
           </FilterContainer>
+          <Price>₹ {currentCar.price}</Price>
           <AddContainer>
             {/* <AmountContainer>
               <Remove /> */}
-              {/* <Amount>1</Amount> */}
-              {/* <Add />
+            {/* <Amount>1</Amount> */}
+            {/* <Add />
             </AmountContainer> */}
-            <Button>ADD TO CART</Button>
+            {
+              currentUser ? (
+                <StripeCheckout
+              name="Your Car"
+              currency="inr"
+              description={`Your total is ${currentCar.price}`}
+              amount={currentCar.price * 100}
+              token={onToken}
+              stripeKey={KEY}
+            >
+              <button>Buy now</button>
+            </StripeCheckout>
+              ) : (
+                <>
+                  <span>Agar kharid ni hai to login kar</span>
+                </>
+              )
+            }
+            
           </AddContainer>
         </InfoContainer>
       </Wrapper>
