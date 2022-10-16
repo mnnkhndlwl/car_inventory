@@ -58,4 +58,14 @@ export const random = async (req, res, next) => {
   }
 };
 
+// search car for a specific location and price range
+export const byLocPrice = async (req, res, next) => {
+  try {
+    const cars = await Car.find({'location' : req.body.location , 'price' : {$lte: req.body.price}}).sort({price: -1});
+    res.status(200).json(cars);
+  } catch (error) {
+    next(error);
+  }
+};
+
 

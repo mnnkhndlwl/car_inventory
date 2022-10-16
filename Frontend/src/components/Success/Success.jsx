@@ -10,9 +10,10 @@ const Success = () => {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
+      fontWeight: "bold"
     }}
   >
-    Transaction completed successfully Thank you 🎉 for using our services
+    <h3>Transaction Completed Successfully 🎉🎊</h3><br/><h4>Thank you 🙏 for using our services</h4>
     <Link to="/">
       <button style={{ padding: 10, marginTop: 20 }}>Go to Homepage</button>
     </Link>
