@@ -5,6 +5,7 @@
   background-size: cover; 
   height: 90vh;
   width: 100%;
+  z-index: -1;
 }
 
  .hero .container {
@@ -27,20 +28,20 @@
   color: #fff;
   opacity: 0.8;
 }
-form {
+.gh {
   background-color: #fff;
   border-radius: 5px;
   margin-top: 50px;
   padding: 0 20px;
 }
-form input {
+.gh input {
   padding: 10px;
   width: 100%;
   border: 1px solid rgba(128, 128, 128, 0.2);
   margin-top: 5px;
   border-radius: 5px;
 }
-form span {
+.gh span {
   font-size: 14px;
   color: grey;
 }
@@ -48,14 +49,14 @@ input::placeholder {
   font-size: 17px;
   color: black;
 }
-form .box {
+.gh .box {
   padding: 15px;
   border-left: 1px solid rgba(128, 128, 128, 0.2);
 }
-form .box:nth-child(1) {
+.gh .box:nth-child(1) {
   border-left: none;
 }
-form h4 {
+.gh h4 {
   font-weight: 500;
 }
 @media screen and (max-width: 800px) {

@@ -20,7 +20,7 @@ router.get("/:id",getCar);
 router.get("/get/all", random);
 
 //search by location and price
-router.get("/get/byLocPrice" , byLocPrice);
+router.post("/get/byLocPrice" , byLocPrice);
 
 export default router;
 
