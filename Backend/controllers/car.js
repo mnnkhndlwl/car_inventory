@@ -68,4 +68,13 @@ export const byLocPrice = async (req, res, next) => {
   }
 };
 
+// search a car by name
+export const byname = async (req, res, next) => {
+  try {
+    const cars = await Car.find({'title' : req.body.title}).sort({price: -1});
+    res.status(200).json(cars);
+  } catch (error) {
+    next(error);
+  }
+};
 

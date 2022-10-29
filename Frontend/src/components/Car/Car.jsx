@@ -9,11 +9,15 @@ import { fetchSuccess } from "../../redux/carSlice";
 import seat from "./seat.png";
 import mileage from "./mileage.png";
 import engine from "./engine.png";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Link, useNavigate } from "react-router-dom";
 
 const KEY = process.env.REACT_APP_STRIPE;
 
-const Container = styled.div``;
+const Container = styled.div`
+display: flex;
+justify-content: center;
+`;
 
 const Wrapper = styled.div`
   padding: 50px;
@@ -92,11 +96,18 @@ const FilterSize = styled.select`
 
 const FilterSizeOption = styled.option``;
 
+const Input = styled.input`
+  border: none;
+  background-color: transparent;
+  outline: none;
+  color: ${({ theme }) => theme.text};
+`;
+
 const AddContainer = styled.div`
   width: 50%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   ${mobile({ width: "100%" })}
 `;
 
@@ -104,6 +115,18 @@ const AmountContainer = styled.div`
   display: flex;
   align-items: center;
   font-weight: 700;
+`;
+
+const Search = styled.div`
+  margin-top: 10px;
+  width: 40%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
 `;
 
 const Amount = styled.span`
@@ -147,9 +170,9 @@ const Car = () => {
       try {
         const res = await userRequest.post("/api/payme/payment/", {
           tokenId: stripeToken.id,
-          amount: currentCar.price*100,
+          amount: currentCar.price * 100,
         });
-          await userRequest.put(`/api/car/buy/${path}`);
+        await userRequest.put(`/api/car/buy/${path}`);
         navigate("/success");
       } catch {}
     };
@@ -160,11 +183,16 @@ const Car = () => {
 
   return (
     <Container>
+    <Search>
+          <Input placeholder="Search" />
+          <SearchOutlinedIcon />
+        </Search>
       <Wrapper>
         <ImgContainer>
           <Image src={currentCar.carImage} />
         </ImgContainer>
         <InfoContainer>
+        
           <Title>
             {currentCar.brand} {currentCar.title}
           </Title>
@@ -173,20 +201,18 @@ const Car = () => {
             <Filter>
               {/* <FilterTitle>Color</FilterTitle> */}
               <FilterColor>
-                <img src={seat} /> 
+                <img src={seat} />
                 <p>Seats</p>
-                <span>
-                  {currentCar.seats}
-                </span>
+                <span>{currentCar.seats}</span>
               </FilterColor>
               <FilterColor>
                 <img src={mileage} />
-              <p>mileage</p>
+                <p>mileage</p>
                 <span>{currentCar.mileage}</span>
               </FilterColor>
               <FilterColor>
                 <img src={engine} />
-              <p>engine</p>
+                <p>engine</p>
                 <span>{currentCar.engine}</span>
               </FilterColor>
             </Filter>
@@ -209,26 +235,25 @@ const Car = () => {
             {/* <Amount>1</Amount> */}
             {/* <Add />
             </AmountContainer> */}
-            {
-              currentUser ? (
-                <StripeCheckout
-              name="Your Car"
-              currency="inr"
-              description={`Your total is ${currentCar.price}`}
-              amount={currentCar.price * 100}
-              token={onToken}
-              stripeKey={KEY}
-            >
-              <button>Buy now</button>
-            </StripeCheckout>
-              ) : (
-                <>
-                  <span>Agar kharid ni hai to login kar</span>
-                </>
-              )
-            }
-            
+            {currentUser ? (
+              <StripeCheckout
+                name="Your Car"
+                currency="inr"
+                description={`Your total is ${currentCar.price}`}
+                amount={currentCar.price * 100}
+                token={onToken}
+                stripeKey={KEY}
+              >
+                <button>Buy now</button>
+              </StripeCheckout>
+            ) : (
+              <>
+                <span>Agar kharid ni hai to login kar</span>
+              </>
+            )}
+            <button>Compare</button>
           </AddContainer>
+          
         </InfoContainer>
       </Wrapper>
     </Container>
