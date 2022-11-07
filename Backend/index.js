@@ -40,7 +40,7 @@ const connect = async () => {
 //middlewares
 app.use(cookieParser());
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: false }))
 app.use("/api/authentication",userRoutes);
 app.use("/api/car", carRoute);
 app.use("/api/payme", stripeRoute);

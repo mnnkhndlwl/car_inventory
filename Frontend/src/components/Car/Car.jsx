@@ -15,13 +15,14 @@ import { Link, useNavigate } from "react-router-dom";
 const KEY = process.env.REACT_APP_STRIPE;
 
 const Container = styled.div`
-display: flex;
-justify-content: center;
+  display: flex;
+  justify-content: center;
 `;
 
 const Wrapper = styled.div`
   padding: 50px;
   display: flex;
+  flex-direction: column;
   ${mobile({ padding: "10px", flexDirection: "column" })}
 `;
 
@@ -141,8 +142,12 @@ const Amount = styled.span`
 `;
 
 const Car = () => {
+  const [isCompare, setIsCompare] = useState(false);
+  const [fetched, setFetched] = useState(false);
   const { currentCar } = useSelector((state) => state.car);
+  const [carCom, setCarCom] = useState("");
   const { currentUser } = useSelector((state) => state.user);
+  const [title, setTitle] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [stripeToken, setStripeToken] = useState(null);
@@ -153,6 +158,21 @@ const Car = () => {
 
   const path = useLocation().pathname.split("/")[2];
 
+  // to fetch car to compare
+  const handleFetch = async () => {
+    // e.preventDefault();
+    try {
+      const result = await publicRequest.get(
+        `/api/car/get/byname?title=${title}`
+      );
+      setCarCom(result.data[0]);
+      setFetched(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // to fetch car
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -165,6 +185,7 @@ const Car = () => {
     fetchData();
   }, [path, dispatch]);
 
+  // for payment
   useEffect(() => {
     const makeRequest = async () => {
       try {
@@ -183,16 +204,22 @@ const Car = () => {
 
   return (
     <Container>
-    <Search>
-          <Input placeholder="Search" />
-          <SearchOutlinedIcon />
+      {isCompare && (
+        <Search>
+          <Input
+            placeholder="Search"
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <SearchOutlinedIcon onClick={handleFetch} />
         </Search>
+      )}
+
+      {/* current car */}
       <Wrapper>
         <ImgContainer>
           <Image src={currentCar.carImage} />
         </ImgContainer>
         <InfoContainer>
-        
           <Title>
             {currentCar.brand} {currentCar.title}
           </Title>
@@ -229,33 +256,109 @@ const Car = () => {
             </Filter> */}
           </FilterContainer>
           <Price>₹ {currentCar.price}</Price>
-          <AddContainer>
-            {/* <AmountContainer>
+          {!fetched && (
+            <>
+              <AddContainer>
+                {/* <AmountContainer>
               <Remove /> */}
-            {/* <Amount>1</Amount> */}
-            {/* <Add />
+                {/* <Amount>1</Amount> */}
+                {/* <Add />
             </AmountContainer> */}
-            {currentUser ? (
-              <StripeCheckout
-                name="Your Car"
-                currency="inr"
-                description={`Your total is ${currentCar.price}`}
-                amount={currentCar.price * 100}
-                token={onToken}
-                stripeKey={KEY}
-              >
-                <button>Buy now</button>
-              </StripeCheckout>
-            ) : (
-              <>
-                <span>Agar kharid ni hai to login kar</span>
-              </>
-            )}
-            <button>Compare</button>
-          </AddContainer>
-          
+
+                {currentUser ? (
+                  <StripeCheckout
+                    name="Your Car"
+                    currency="inr"
+                    description={`Your total is ${currentCar.price}`}
+                    amount={currentCar.price * 100}
+                    token={onToken}
+                    stripeKey={KEY}
+                  >
+                    <button>Buy now</button>
+                  </StripeCheckout>
+                ) : (
+                  <>
+                    <span>Agar kharid ni hai to login kar</span>
+                  </>
+                )}
+                <button onClick={() => setIsCompare(true)}>Compare</button>
+              </AddContainer>
+            </>
+          )}
         </InfoContainer>
       </Wrapper>
+      {/* fetched car */}
+      {fetched && (
+        <Wrapper>
+          <ImgContainer>
+            <Image src={carCom.carImage} />
+          </ImgContainer>
+          <InfoContainer>
+            <Title>
+              {carCom.brand} {carCom.title}
+            </Title>
+            <Desc>{carCom.description}</Desc>
+            <FilterContainer>
+              <Filter>
+                {/* <FilterTitle>Color</FilterTitle> */}
+                <FilterColor>
+                  <img src={seat} />
+                  <p>Seats</p>
+                  <span>{carCom.seats}</span>
+                </FilterColor>
+                <FilterColor>
+                  <img src={mileage} />
+                  <p>mileage</p>
+                  <span>{carCom.mileage}</span>
+                </FilterColor>
+                <FilterColor>
+                  <img src={engine} />
+                  <p>engine</p>
+                  <span>{carCom.engine}</span>
+                </FilterColor>
+              </Filter>
+
+              {/* <Filter>
+              <FilterTitle>Size</FilterTitle>
+              <FilterSize>
+                <FilterSizeOption>XS</FilterSizeOption>
+                <FilterSizeOption>S</FilterSizeOption>
+                <FilterSizeOption>M</FilterSizeOption>
+                <FilterSizeOption>L</FilterSizeOption>
+                <FilterSizeOption>XL</FilterSizeOption>
+              </FilterSize>
+            </Filter> */}
+            </FilterContainer>
+            <Price>₹ {carCom.price}</Price>
+            {!fetched && (
+              <AddContainer>
+                {/* <AmountContainer>
+              <Remove /> */}
+                {/* <Amount>1</Amount> */}
+                {/* <Add />
+            </AmountContainer> */}
+                {currentUser ? (
+                  <StripeCheckout
+                    name="Your Car"
+                    currency="inr"
+                    description={`Your total is ${carCom.price}`}
+                    amount={carCom.price * 100}
+                    token={onToken}
+                    stripeKey={KEY}
+                  >
+                    <button>Buy now</button>
+                  </StripeCheckout>
+                ) : (
+                  <>
+                    <span>Agar kharid ni hai to login kar</span>
+                  </>
+                )}
+                <button>Compare</button>
+              </AddContainer>
+            )}
+          </InfoContainer>
+        </Wrapper>
+      )}
     </Container>
   );
 };
