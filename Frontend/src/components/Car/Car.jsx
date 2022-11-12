@@ -58,7 +58,7 @@ const Price = styled.span`
 `;
 
 const FilterContainer = styled.div`
-  width: 50%;
+  width: 100%;
   margin: 30px 0px;
   display: flex;
   justify-content: space-between;
@@ -66,6 +66,7 @@ const FilterContainer = styled.div`
 `;
 
 const Filter = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
 `;
@@ -105,7 +106,7 @@ const Input = styled.input`
 `;
 
 const AddContainer = styled.div`
-  width: 50%;
+  width: 20%;
   display: flex;
   align-items: center;
   justify-content: space-around;

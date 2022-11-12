@@ -78,3 +78,12 @@ export const byname = async (req, res, next) => {
   }
 };
 
+// get all the cars for admin
+export const randomOne = async (req, res, next) => {
+  try {
+    const cars = await Car.find().sort({price: -1});
+    res.status(200).json(cars);
+  } catch (error) {
+    next(error);
+  }
+};
